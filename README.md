@@ -2,6 +2,7 @@
 
 基于 Qwen-TTS API 的功能丰富的语音合成 FastAPI 应用，支持中英双语及中文方言的智能语音合成。
 
+![Qwen-TTS 语音合成服务界面](https://r2.kateviews.com/20250701_122618_629.png)
 
 ## ✨ 功能特性
 

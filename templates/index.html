@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-microphone-alt"></i>
+                    Qwen-TTS 语音合成
+                </h1>
+                <p class="subtitle">支持中英双语及中文方言的智能语音合成服务</p>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 输入区域 -->
+            <div class="input-section">
+                <div class="card">
+                    <h2 class="section-title">
+                        <i class="fas fa-edit"></i>
+                        文本输入
+                    </h2>
+                    
+                    <form id="ttsForm" class="tts-form">
+                        <!-- 文本输入 -->
+                        <div class="form-group">
+                            <label for="text" class="form-label">输入文本</label>
+                            <textarea 
+                                id="text" 
+                                name="text" 
+                                class="form-textarea" 
+                                placeholder="请输入要合成语音的文本内容..."
+                                maxlength="1000"
+                                required
+                            ></textarea>
+                            <div class="char-counter">
+                                <span id="charCount">0</span>/1000
+                            </div>
+                        </div>
+
+                        <!-- 音色选择 -->
+                        <div class="form-group">
+                            <label for="voice" class="form-label">选择音色</label>
+                            <div class="voice-grid">
+                                {% for voice_key, voice_info in voices.items() %}
+                                <div class="voice-card" data-voice="{{ voice_key }}">
+                                    <input type="radio" name="voice" value="{{ voice_key }}" id="voice_{{ voice_key }}" 
+                                           {% if voice_key == "Cherry" %}checked{% endif %}>
+                                    <label for="voice_{{ voice_key }}" class="voice-label">
+                                        <div class="voice-name">{{ voice_info.name }}</div>
+                                        <div class="voice-desc">{{ voice_info.description }}</div>
+                                        <div class="voice-dialect">{{ voice_info.dialect }}</div>
+                                        <div class="voice-lang">{{ voice_info.language }}</div>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- 高级设置 -->
+                        <div class="form-group">
+                            <div class="advanced-toggle">
+                                <button type="button" id="advancedToggle" class="toggle-btn">
+                                    <i class="fas fa-cog"></i>
+                                    高级设置
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </button>
+                            </div>
+                            
+                            <div id="advancedSettings" class="advanced-settings">
+                                <div class="settings-grid">
+                                    <div class="setting-item">
+                                        <label for="speed" class="setting-label">语速</label>
+                                        <div class="slider-container">
+                                            <input type="range" id="speed" name="speed" min="0.5" max="2.0" step="0.1" value="1.0" class="slider">
+                                            <span class="slider-value" id="speedValue">1.0x</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label for="pitch" class="setting-label">音调</label>
+                                        <div class="slider-container">
+                                            <input type="range" id="pitch" name="pitch" min="0.5" max="2.0" step="0.1" value="1.0" class="slider">
+                                            <span class="slider-value" id="pitchValue">1.0x</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <label for="volume" class="setting-label">音量</label>
+                                        <div class="slider-container">
+                                            <input type="range" id="volume" name="volume" min="0.1" max="2.0" step="0.1" value="1.0" class="slider">
+                                            <span class="slider-value" id="volumeValue">1.0x</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="form-group">
+                            <button type="submit" id="synthesizeBtn" class="btn-primary">
+                                <i class="fas fa-play"></i>
+                                <span class="btn-text">开始合成</span>
+                                <div class="loading-spinner"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 结果区域 -->
+            <div class="result-section">
+                <div class="card" id="resultCard" style="display: none;">
+                    <h2 class="section-title">
+                        <i class="fas fa-volume-up"></i>
+                        合成结果
+                    </h2>
+                    
+                    <div id="resultContent">
+                        <!-- 动态内容将在这里显示 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历史记录 -->
+            <div class="history-section">
+                <div class="card">
+                    <h2 class="section-title">
+                        <i class="fas fa-history"></i>
+                        历史记录
+                        <button id="clearHistory" class="btn-secondary btn-small">
+                            <i class="fas fa-trash"></i>
+                            清空
+                        </button>
+                    </h2>
+                    
+                    <div id="historyList" class="history-list">
+                        <div class="empty-state">
+                            <i class="fas fa-clock"></i>
+                            <p>暂无历史记录</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2025 Qwen-TTS 语音合成服务 | 基于 Qwen-TTS API 构建</p>
+        </footer>
+    </div>
+
+    <!-- 通知组件 -->
+    <div id="notification" class="notification"></div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

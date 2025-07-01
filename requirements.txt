@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+dashscope
+requests
+python-multipart
+jinja2
+aiofiles
+pydantic
+python-dotenv

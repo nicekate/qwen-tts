@@ -40,7 +40,17 @@
 
 ## 🚀 快速开始
 
-### 1. 环境准备
+### 1. 克隆仓库
+
+```bash
+# 克隆项目到本地
+git clone https://github.com/nicekate/qwen-tts.git
+
+# 进入项目目录
+cd qwen-tts
+```
+
+### 2. 环境准备
 
 确保已安装 Python 3.8+ 并下载项目文件。
 
@@ -70,7 +80,7 @@ cp .env.example .env
 - pydantic - 数据验证
 - python-dotenv - 环境变量管理
 
-### 2. 配置 API Key
+### 3. 配置 API Key
 
 ```bash
 # 复制环境变量模板
@@ -93,7 +103,7 @@ cp .env.example .env
 - 请确保您的账户有足够的余额或免费额度
 - 请妥善保管您的 API Key，不要泄露给他人
 
-### 3. 启动服务
+### 4. 启动服务
 
 ```bash
 # 使用启动脚本（推荐）
@@ -106,13 +116,13 @@ python main.py
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 4. 访问应用
+### 5. 访问应用
 
 - **Web 界面**: http://localhost:8000
 - **API 文档**: http://localhost:8000/docs
 - **ReDoc 文档**: http://localhost:8000/redoc
 
-### 5. 运行演示
+### 6. 运行演示
 
 ```bash
 # 运行演示脚本，测试所有音色

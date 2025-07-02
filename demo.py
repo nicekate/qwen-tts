@@ -45,10 +45,7 @@ def demo_tts_api():
                 f"{base_url}/api/synthesize",
                 json={
                     "text": case["text"],
-                    "voice": case["voice"],
-                    "speed": 1.0,
-                    "pitch": 1.0,
-                    "volume": 1.0
+                    "voice": case["voice"]
                 },
                 timeout=30
             )
